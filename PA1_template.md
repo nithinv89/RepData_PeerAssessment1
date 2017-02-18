@@ -19,7 +19,7 @@ hist(steps_date$steps, main = "Total Number of Steps Each Day", col = "green", x
 Mean <- mean(steps_date$steps)
 Median <- median(steps_date$steps)
 
-
+![alt tag](https://github.com/nithinv89/RepData_PeerAssessment1/blob/master/Diagrams/Plot%201.png)
 
 
 # What is the Average Daily Activity Pattern
