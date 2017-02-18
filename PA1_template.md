@@ -18,7 +18,7 @@ hist(steps_date$steps, main = "Total Number of Steps Each Day", col = "green", x
 ### Calculate Mean and Median
 Mean <- mean(steps_date$steps)
 Median <- median(steps_date$steps)
-### Mean is 10766.19 and the median is 10765
+
 
 
 
