@@ -1,0 +1,112 @@
+---
+Title: "Reproducible Research - Peer Assignment1"
+Name: "Nithin V"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Loading and Reprocessing the data
+
+### - Load the data
+```{r, echo=TRUE}
+library(ggplot2)
+library(stats)
+read <- read.csv(file = "activity.csv")
+View(read)
+summary(read)
+dim(read)
+```
+
+# What is mean total number of steps taken per day?
+
+### - Sum steps by date
+```{r}
+steps_date <- aggregate(steps ~ date, read, sum)
+```
+
+### - Create Histogram
+```{r}
+hist(steps_date$steps, main = "Total Number of Steps Each Day", col = "green", xlab = "Number of Steps")
+```
+
+### - Calculate Mean and Median
+```{r}
+Mean <- mean(steps_date$steps)
+Median <- median(steps_date$steps)
+```
+
+* Mean: `r Mean` 
+* Median: `r Median`
+
+
+# What is the Average Daily Activity Pattern
+
+### - Calculate the average steps for each interval
+```{r}
+steps_interval <- aggregate(steps ~ interval, read, mean)
+```
+
+### - Plot the Average Number of Steps per day with respect to interval
+```{r}
+plot(steps_interval$interval, steps_interval$steps, type = "l", main = "Average Steps / Day by Interval", xlab = "Interval", ylab = "Number of Steps")
+```
+
+### - Interval with most average steps
+```{r}
+max_int <- steps_interval[which.max(steps_interval$steps), 1]
+```
+
+
+* Maximam 5 min Interval: `r max_int` 
+
+# Imputing missing values
+
+### - Calculate and report the total number of missing values in the dataset
+```{r}
+any(is.na(read$steps))
+count <- sum(is.na(read$steps))
+```
+
+* Missing Values: `r count`
+
+### - Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc
+
+### - Create a new dataset that is equal to the original dataset but with the missing data filled in
+```{r}
+fil <- function(steps, interval) {
+  filler <- NA
+  if (!is.na(steps))
+    filler <- c(steps)
+  else
+    filler <- (steps_interval[steps_interval$interval==interval, "steps"])
+  return(filler)
+}
+filler.new <- read
+filler.new$steps <- mapply(fil, filler.new$steps, filler.new$interval)
+```
+
+### - Histogram showing the number of steps taken each day
+
+```{r}
+Tsteps <- tapply(filler.new$steps, filler.new$date, FUN = sum)
+qplot(Tsteps, binwidth = 2000, xlab = "Total number of steps taken each day", main = "Histogram showing the number of steps taken each day")
+Mean1 <- mean(Tsteps)
+Median1 <- median(Tsteps)
+```
+
+* Mean: `r Mean1`
+* Median: `r Median1`
+
+# Are there differences in activity patterns between weekdays and weekends?
+
+### - Create a new factor variable in the dataset with two levels indicating whether a given date is a weekday or weekend day
+```{r}
+filler.new$daytype <- ifelse(as.POSIXlt(filler.new$date)$wday %in% c(0,6), 'weekend', 'weekday')
+```
+### - Make a panel plot containing a time series plot
+```{r}
+final <- aggregate(steps ~ interval + daytype, filler.new, mean)
+ggplot(final, aes(interval, steps)) + geom_line() + facet_grid(daytype ~ .)
+```
