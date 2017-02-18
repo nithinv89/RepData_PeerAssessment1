@@ -32,6 +32,7 @@ plot(steps_interval$interval, steps_interval$steps, type = "l", main = "Average 
 max_int <- steps_interval[which.max(steps_interval$steps), 1]
 ### Highest mean of the number of steps per 5-minute interval
 
+![alt tag](https://github.com/nithinv89/RepData_PeerAssessment1/blob/master/Diagrams/Plot%202.png)
 
 
 # Imputing missing values
@@ -59,6 +60,8 @@ qplot(Tsteps, binwidth = 2000, xlab = "Total number of steps taken each day", ma
 mean(Tsteps)
 median(Tsteps)
 
+![alt tag](https://github.com/nithinv89/RepData_PeerAssessment1/blob/master/Diagrams/Plot%203.png)
+
 
 # Are there differences in activity patterns between weekdays and weekends?
 
@@ -67,3 +70,5 @@ filler.new$daytype <- ifelse(as.POSIXlt(filler.new$date)$wday %in% c(0,6), 'week
 ### Make a panel plot containing a time series plot
 final <- aggregate(steps ~ interval + daytype, filler.new, mean)
 ggplot(final, aes(interval, steps)) + geom_line() + facet_grid(daytype ~ .)
+
+![alt tag](https://github.com/nithinv89/RepData_PeerAssessment1/blob/master/Diagrams/Plot%204.png)
