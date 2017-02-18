@@ -36,9 +36,10 @@ max_int <- steps_interval[which.max(steps_interval$steps), 1]
 
 # Imputing missing values
 
-### Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with ????????s)
+### Calculate and report the total number of missing values in the dataset 
 any(is.na(read$steps))
 sum(is.na(read$steps))
+
 ### Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc
 ### Create a new dataset that is equal to the original dataset but with the missing data filled in
 fil <- function(steps, interval) {
@@ -51,18 +52,17 @@ fil <- function(steps, interval) {
 }
 filler.new <- read
 filler.new$steps <- mapply(fil, filler.new$steps, filler.new$interval)
+
 ### Histogram showing the number of steps taken each day
 Tsteps <- tapply(filler.new$steps, filler.new$date, FUN = sum)
 qplot(Tsteps, binwidth = 2000, xlab = "Total number of steps taken each day", main = "Histogram showing the number of steps taken each day")
 mean(Tsteps)
 median(Tsteps)
-### Mean and median appear to be the same and more than the first part of the assignment
-
 
 
 # Are there differences in activity patterns between weekdays and weekends?
 
-### Create a new factor variable in the dataset with two levels ??? ???weekday??? and ???weekend??? indicating whether a given date is a weekday or weekend day
+### Create a new factor variable in the dataset with two levels indicating whether a given date is a weekday or weekend day
 filler.new$daytype <- ifelse(as.POSIXlt(filler.new$date)$wday %in% c(0,6), 'weekend', 'weekday')
 ### Make a panel plot containing a time series plot
 final <- aggregate(steps ~ interval + daytype, filler.new, mean)
